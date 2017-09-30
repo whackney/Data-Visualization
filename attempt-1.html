@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<head>
+
+<style>
+
+.chart div {
+  font: 10px sans-serif;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+  height: 100%
+}
+
+.male {
+  background-color: steelblue;
+}
+
+.female {
+  background-color: pink;
+}
+
+body {
+  height : 100%;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+<div class="chart"></chart>
+
+  <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+  <script type="text/javascript">
+
+var file2020 = "https://raw.githubusercontent.com/whackney/Data-Visualization/master/2020%20Life%20Table.json"
+
+  d3.json(file2020, function(data) {
+  //d3.select("body").append("p").text(data);
+  var key = "Male Age";
+  var goodData = [];
+
+nkey = key.replace(/\s/g, '');
+
+  for(i = 0; i < file2020.length; i++){
+     if(data[i].hasOwnProperty(key)){
+          goodData.push({'name' : nkey, 'value' : data[i][key]});
+     }
+  }
+
+d3.select(".chart")
+.selectAll("div")
+.data(goodData)
+.enter().append("div")
+.attr("class", "male")
+.style("width", function(d) { return d.value + "px"})
+.text(function(d) {return d.value});
+
+
+  });
+
+  </script>
+</body>
