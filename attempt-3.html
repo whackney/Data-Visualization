@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<head>
+
+<style>
+
+.chart div {
+  font: 10px sans-serif;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+  height: 100%;
+
+}
+
+.male div {
+  background-color: steelblue;
+  text-align: right;
+}
+
+.female div {
+  background-color: pink;
+  text-align: left;
+}
+
+body {
+  height : 100%;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="chart female"></div>
+<div class="chart male"></div>
+
+  <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+  <script type="text/javascript">
+
+var year = 1900;
+
+var num = " Number of people alive";
+var death = " Death Probability"
+var life = " Life Expectancy"
+
+var type = num;
+
+
+//DOOOOOOOO THE QUEUEEEEEE
+var q = d3.queue();
+for (i = 1900; 1 < 2031; i = i + 10) {
+  q.defer(d3.json, "https://raw.githubusercontent.com/whackney/Data-Visualization/master/"
+  + i + "%20Life.json")
+}
+q.await(function(error, file1, file2) {
+    if (error) {
+        console.error('Oh dear, something went wrong: ' + error);
+    }
+    d3.select("body").append.text(help(year, "Female", type));
+
+
+    //Make the male part
+    d3.select(".male")
+    .selectAll("div")
+    .data(help(year, "Male", type))
+    .enter().append("div")
+    .style("width", function(d) { return d.age + "px"})
+    .text(function(d) {return d.value});
+
+
+    //Make the female part
+    d3.select(".female")
+    .selectAll("div")
+    .data(help(year, "Female", type))
+    .enter().append("div")
+    .style("width", function(d){ return d.age + "px"})
+    .text(function(d) {return d.value});
+
+});
+
+
+//TODO: make this into a callable function thing
+//  the data isn't different for male or female right now!
+
+function help(year, sex, type) {
+  var url = "https://raw.githubusercontent.com/whackney/Data-Visualization/master/"
+  + year + "%20Life.json";
+var goodData = [];
+  d3.json(url, function(data) {
+  var key = sex + type;
+  for(i = 0; i < url.length; i++) {
+     if(data[i].hasOwnProperty(key)) {
+          goodData.push({'name' : data[i][sex + " Age"],
+          'value' : (data[i][key]).replace(',','')});
+     }
+  }
+});
+return goodData;
+}
+
+/*
+var xfem = d3.scale.linear()
+.domain([0, d3.max(help(year, "Male", type), function(d) {return d.value;})])
+.range([0, 600]);
+*/
+
+
+  </script>
+</body>

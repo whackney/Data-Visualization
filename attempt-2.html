@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<head>
+
+<style>
+
+.chart div {
+  font: 10px sans-serif;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+  height: 100%;
+
+}
+
+.male div {
+  background-color: steelblue;
+}
+
+.female div {
+  background-color: pink;
+}
+
+body {
+  height : 100%;
+}
+
+</style>
+
+
+</head>
+
+<body>
+
+<div class="chart female"></div>
+
+<div class="chart male"></div>
+
+
+
+  <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+  <script type="text/javascript">
+
+var file1900 = "https://raw.githubusercontent.com/whackney/Data-Visualization/master/1900%20Life.json"
+
+
+  d3.json(file1900, function(data) {
+  //d3.select("body").append("p").text(data);
+  var key = "Male Number of people alive";
+  var goodData = [];
+
+nkey = key.replace(/\s/g, '');
+
+  for(i = 0; i < file1900.length; i++){
+     if(data[i].hasOwnProperty(key)){
+          goodData.push({'name' : nkey, 'value' : data[i][key]});
+     }
+  }
+
+d3.select(".male")
+.selectAll("div")
+.data(goodData)
+.enter().append("div")
+.style("width", function(d) { return d.value + "px"})
+.text(function(d) {return d.value});
+
+
+d3.select(".female")
+.selectAll("div")
+.data(goodData)
+.enter().append("div")
+.style("width", function(d) { return d.value + "px"})
+.text(function(d) {return d.value});
+
+
+  });
+
+  </script>
+</body>
